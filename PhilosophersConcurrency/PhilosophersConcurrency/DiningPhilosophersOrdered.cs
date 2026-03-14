@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 
 class DiningPhilosophersOrdered
@@ -7,10 +8,14 @@ class DiningPhilosophersOrdered
     private readonly int thinkingTime;
     private readonly int eatingTime;
 
+    private long totalEatingTime = 0;
+    private object eatLock = new object();
+
     private readonly object[] forks;
     private readonly Thread[] threads;
 
     private volatile bool running = true;
+    private Stopwatch dinnerTimer = new Stopwatch();
 
     public DiningPhilosophersOrdered(int n, int thinkingTime, int eatingTime)
     {
@@ -24,6 +29,8 @@ class DiningPhilosophersOrdered
 
     public void Start()
     {
+        dinnerTimer.Start();
+
         for (int i = 0; i < n; i++)
         {
             forks[i] = new object();
@@ -47,11 +54,16 @@ class DiningPhilosophersOrdered
             t.Join();
         }
 
+        dinnerTimer.Stop();
+
         Console.WriteLine("All philosophers stopped");
+        Console.WriteLine($"Total time spent eating {totalEatingTime} ms");
+        Console.WriteLine($"Total dinner time: {dinnerTimer.ElapsedMilliseconds} ms");
     }
 
     private void PhilosopherLoop(int index)
     {
+        int localEatingTime = 0;
         Random rand = new Random(index * 1000);
 
         int leftFork = index;
@@ -73,7 +85,7 @@ class DiningPhilosophersOrdered
                     lock (forks[leftFork])
                     {
                         Console.WriteLine($"Philospoher Nr. {index} took left fork {leftFork}");
-                        Eat(rand, index);
+                        localEatingTime += Eat(rand, index);
                     }
                 }
             }
@@ -86,18 +98,26 @@ class DiningPhilosophersOrdered
                     lock (forks[rightFork])
                     {
                         Console.WriteLine($"Philospoher Nr. {index} took right fork {rightFork}");
-                        Eat(rand, index);
+                        localEatingTime += Eat(rand, index);
                     }
                 }
             }
         }
+        // Safely add local eating time to total time
+        lock (eatLock)
+        {
+            totalEatingTime += localEatingTime;
+        }
     }
 
-    private void Eat(Random rand, int index)
+    private int Eat(Random rand, int index)
     {
         int eatTime = rand.Next(eatingTime);
+
         Thread.Sleep(eatTime);
 
-        Console.WriteLine($"Philospoher Nr. {index} finished eating");
+        Console.WriteLine($"Philosopher Nr. {index} finished eating");
+
+        return eatTime;
     }
 }
