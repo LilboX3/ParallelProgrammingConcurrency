@@ -64,8 +64,7 @@ class DiningPhilosophersOrdered
 
             Console.WriteLine($"Philospoher Nr. {index} finished thinking");
 
-            // 
-            if (index % 2 == 0) // even philosophers
+            if (index % 2 == 0) // even philosophers - take right first
             {
                 lock (forks[rightFork])
                 {
@@ -78,7 +77,7 @@ class DiningPhilosophersOrdered
                     }
                 }
             }
-            else // odd philosophers
+            else // odd philosophers - take left first
             {
                 lock (forks[leftFork])
                 {
