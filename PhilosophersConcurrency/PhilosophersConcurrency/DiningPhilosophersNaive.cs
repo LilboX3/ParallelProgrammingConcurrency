@@ -20,15 +20,15 @@ class DiningPhilosophersNaive
 
         forks = new object[n];
         threads = new Thread[n];
-
-        for (int i = 0; i < n; i++)
-        {
-            forks[i] = new object();
-        }
     }
 
     public void Start()
     {
+        for (int i = 0; i < n; i++)
+        {
+            forks[i] = new object();
+        }
+
         for (int i = 0; i < n; i++)
         {
             int index = i;

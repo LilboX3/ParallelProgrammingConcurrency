@@ -20,15 +20,15 @@ class DiningPhilosophersOrdered
 
         forks = new object[n];
         threads = new Thread[n];
-
-        for (int i = 0; i < n; i++)
-        {
-            forks[i] = new object();
-        }
     }
 
     public void Start()
     {
+        for (int i = 0; i < n; i++)
+        {
+            forks[i] = new object();
+        }
+
         for (int i = 0; i < n; i++)
         {
             int index = i;
@@ -62,18 +62,18 @@ class DiningPhilosophersOrdered
             int thinkTime = rand.Next(thinkingTime);
             Thread.Sleep(thinkTime);
 
-            Console.WriteLine($"Philosopher {index} finished thinking");
+            Console.WriteLine($"Philospoher Nr. {index} finished thinking");
 
-            // ORDERING STRATEGY
+            // 
             if (index % 2 == 0) // even philosophers
             {
                 lock (forks[rightFork])
                 {
-                    Console.WriteLine($"Philosopher {index} took right fork {rightFork}");
+                    Console.WriteLine($"Philospoher Nr. {index} took right fork {rightFork}");
 
                     lock (forks[leftFork])
                     {
-                        Console.WriteLine($"Philosopher {index} took left fork {leftFork}");
+                        Console.WriteLine($"Philospoher Nr. {index} took left fork {leftFork}");
                         Eat(rand, index);
                     }
                 }
@@ -82,11 +82,11 @@ class DiningPhilosophersOrdered
             {
                 lock (forks[leftFork])
                 {
-                    Console.WriteLine($"Philosopher {index} took left fork {leftFork}");
+                    Console.WriteLine($"Philospoher Nr. {index} took left fork {leftFork}");
 
                     lock (forks[rightFork])
                     {
-                        Console.WriteLine($"Philosopher {index} took right fork {rightFork}");
+                        Console.WriteLine($"Philospoher Nr. {index} took right fork {rightFork}");
                         Eat(rand, index);
                     }
                 }
@@ -99,6 +99,6 @@ class DiningPhilosophersOrdered
         int eatTime = rand.Next(eatingTime);
         Thread.Sleep(eatTime);
 
-        Console.WriteLine($"Philosopher {index} finished eating");
+        Console.WriteLine($"Philospoher Nr. {index} finished eating");
     }
 }
