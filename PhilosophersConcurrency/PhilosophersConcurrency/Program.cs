@@ -13,7 +13,8 @@
             Console.Write("Max eating time (ms): ");
             int eatingTime = int.Parse(Console.ReadLine());
 
-            var dinner = new DiningPhilosophersNaive(n, thinkingTime, eatingTime);
+            //var dinner = new DiningPhilosophersNaive(n, thinkingTime, eatingTime);
+            var dinner = new DiningPhilosophersOrdered(n, thinkingTime, eatingTime);
 
             dinner.Start();
 
